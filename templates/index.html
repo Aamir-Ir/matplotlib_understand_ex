@@ -3,111 +3,63 @@
 <head>
     <title>Matplotlib Graph</title>
     <style>
-        /* Reset some default styles */
-        body, h1, p, img {
-            margin: 0;
-            padding: 0;
-        }
-
-        /* Set a background color and font for the body */
+        /* Add your CSS styles here */
         body {
-            background-color: #f2f2f2;
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
+            background-color: black;
+            color: white;
         }
-
-        /* Style the header */
-        h1 {
-            background-color: #333;
-            color: #fff;
-            padding: 20px;
-            text-align: center;
-        }
-
-        /* Style the container for the graph and code */
-        .container {
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            flex-wrap: wrap;
-            padding: 20px;
-        }
-
-        /* Style the graph image */
-        .graph {
-            max-width: 100%;
-            height: auto;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        }
-
-        /* Style the code block */
-        .code {
-            background-color: #fff;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            padding: 20px;
-            width: 45%;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            overflow-x: auto; /* Enable horizontal scrolling if needed */
-        }
-
-        /* Style the copy code button */
-        .copy-button {
-            background-color: #333;
-            color: #fff;
-            border: none;
-            padding: 10px 20px;
-            cursor: pointer;
-            border-radius: 5px;
-            transition: background-color 0.3s;
-        }
-
-        .copy-button:hover {
-            background-color: #555;
-        }
-
-        /* Add some spacing between elements */
-        .space {
-            margin-bottom: 20px;
-        }
-
-        /* Center elements on smaller screens */
-        @media (max-width: 768px) {
-            .container {
-                flex-direction: column;
-            }
-
-            .code {
-                width: 100%;
-            }
-        }
+        /* Add more styles as needed */
     </style>
 </head>
 <body>
-    <h1>Normal Distribution Graph Made Using Matplotlib Library</h1>
-    <!-- Display the Matplotlib graph -->
-    <div class="container">
+    <h1>Matplotlib Graph</h1>
+    <img src="matplotlib_histogram.png" alt="Matplotlib Graph">
+    
+    <!-- Button to copy the code to the clipboard -->
+    <button onclick="copyCode()">Copy Code</button>
 
-        <img src="data:image/png;base64,{{ graph }}" alt="Matplotlib Graph" class="graph">
-        <!-- Code block to display the backend code -->
-        <!-- Button to copy the code to the clipboard -->
+    <!-- Code block to display the Python code -->
+    <pre id="code" style="background-color: black; color: white;">
+        import matplotlib
+        matplotlib.use('Agg')  # Set the backend to Agg before importing pyplot
 
-        <pre class="code">{{ graph_code }}</pre>
-    </div>
+        import matplotlib.pyplot as plt
+        import numpy as np
+        from flask import Flask, send_file
+        from io import BytesIO
 
-    <div class="container space">
-        <button onclick="copyCode()" class="copy-button">Copy Code</button>
-    </div>
+        app = Flask(__name__)
+
+        # Function to generate and return the Matplotlib graph
+        def generate_matplotlib_graph():
+            x = np.random.randn(10000)
+            plt.hist(x, 100)
+            plt.title(r'Normal distribution with $\mu=0, \sigma=1$')
+
+            buffer = BytesIO()
+            plt.savefig(buffer, format='png')
+            buffer.seek(0)
+            plt.close()
+
+            return buffer
+
+        # Route to display the Matplotlib graph
+        @app.route('/')
+        def display_graph():
+            buffer = generate_matplotlib_graph()
+            return send_file(buffer, mimetype='image/png')
+
+        if __name__ == '__main__':
+            app.run(debug=True)
+    </pre>
 
     <script>
         // Function to copy the code to the clipboard
         function copyCode() {
             // Get the code element
-            var codeElement = document.querySelector('.code');
+            var codeElement = document.getElementById('code');
 
-            // Select the text within the <pre> element
+            // Select the text within the pre element
             var range = document.createRange();
             range.selectNode(codeElement);
             window.getSelection().removeAllRanges();

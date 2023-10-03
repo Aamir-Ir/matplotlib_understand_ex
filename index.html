@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Matplotlib Graph</title>
+    <style>
+        /* Add your CSS styles here */
+        body {
+            background-color: black;
+            color: white;
+        }
+        /* Add more styles as needed */
+    </style>
+</head>
+<body>
+    <h1>Matplotlib Graph</h1>
+    <img src="matplotlib_histogram.png" alt="Matplotlib Graph">
+    
+    <!-- Button to copy the code to the clipboard -->
+    <button onclick="copyCode()">Copy Code</button>
+
+    <!-- Code block to display the Python code -->
+    <pre id="code" style="background-color: black; color: white;">
+        import matplotlib
+        matplotlib.use('Agg')  # Set the backend to Agg before importing pyplot
+
+        import matplotlib.pyplot as plt
+        import numpy as np
+        from flask import Flask, send_file
+        from io import BytesIO
+
+        app = Flask(__name__)
+
+        # Function to generate and return the Matplotlib graph
+        def generate_matplotlib_graph():
+            x = np.random.randn(10000)
+            plt.hist(x, 100)
+            plt.title(r'Normal distribution with $\mu=0, \sigma=1$')
+
+            buffer = BytesIO()
+            plt.savefig(buffer, format='png')
+            buffer.seek(0)
+            plt.close()
+
+            return buffer
+
+        # Route to display the Matplotlib graph
+        @app.route('/')
+        def display_graph():
+            buffer = generate_matplotlib_graph()
+            return send_file(buffer, mimetype='image/png')
+
+        if __name__ == '__main__':
+            app.run(debug=True)
+    </pre>
+
+    <script>
+        // Function to copy the code to the clipboard
+        function copyCode() {
+            // Get the code element
+            var codeElement = document.getElementById('code');
+
+            // Select the text within the pre element
+            var range = document.createRange();
+            range.selectNode(codeElement);
+            window.getSelection().removeAllRanges();
+            window.getSelection().addRange(range);
+
+            // Execute the copy command
+            document.execCommand('copy');
+
+            // Deselect the text
+            window.getSelection().removeAllRanges();
+
+            // Provide feedback to the user (you can customize this part)
+            alert('Code copied to clipboard!');
+        }
+    </script>
+</body>
+</html>

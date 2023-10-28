@@ -21,6 +21,9 @@ app = Flask(__name__)
 # git commit -m "TEST"
 # git push
 
+# Now this is a check to see that the changes I am making can be replicated thorugh VScode and uploaded on to github without any problems
+# Hopefully this works.
+
 # Function to generate the Matplotlib graph
 def generate_matplotlib_graph():
     fig = Figure()

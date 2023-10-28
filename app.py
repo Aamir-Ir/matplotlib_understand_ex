@@ -10,6 +10,17 @@ import base64
 
 app = Flask(__name__)
 
+# I am testing the funcitonality of github through this repository one to see simple changes
+# Firstly I am cloning the repository
+# Next will be to do my first commit after a few changes
+# Note all these changes can be seen through Github commit history
+
+# To push on to the main branch simply try this
+# NOTe ONE HUGE THING When commiting got a fatal error on first step below why because you have to be in that directory when pushing
+# git add .
+# git commit -m "TEST"
+# git push
+
 # Function to generate the Matplotlib graph
 def generate_matplotlib_graph():
     fig = Figure()
